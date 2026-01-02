@@ -1,5 +1,6 @@
 -- VoidwareUI Library v2.0
--- Discord-Style UI Library by LinuxxUserr
+-- Modern Discord/Voidware Style UI Library
+-- GitHub: https://github.com/YOUR_USERNAME/VoidwareUI
 
 local VoidwareUI = {}
 local UserInputService = game:GetService("UserInputService")
@@ -7,7 +8,7 @@ local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
 
--- Theme Colors (Voidware/Discord Style)
+-- Theme Colors
 local Theme = {
     Background = Color3.fromRGB(47, 49, 54),
     Sidebar = Color3.fromRGB(32, 34, 37),
@@ -62,7 +63,7 @@ local function MakeDraggable(frame, handle)
     end)
 end
 
--- Main Window Creation
+-- CreateWindow: Main window creation
 function VoidwareUI:CreateWindow(config)
     config = config or {}
     local WindowName = config.Name or "VoidwareUI"
@@ -149,7 +150,6 @@ function VoidwareUI:CreateWindow(config)
     IconText.Font = Enum.Font.GothamBold
     IconText.Parent = TitleIcon
     
-    -- Title
     local Title = Instance.new("TextLabel")
     Title.Name = "Title"
     Title.Size = UDim2.new(1, -170, 1, 0)
@@ -167,7 +167,6 @@ function VoidwareUI:CreateWindow(config)
     CloseButton.Name = "CloseButton"
     CloseButton.Size = UDim2.new(0, 40, 0, 40)
     CloseButton.Position = UDim2.new(1, -45, 0.5, -20)
-    CloseButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0, 0)
     CloseButton.BackgroundTransparency = 1
     CloseButton.Text = "×"
     CloseButton.TextColor3 = Theme.SubText
@@ -221,21 +220,17 @@ function VoidwareUI:CreateWindow(config)
         Tween(MinimizeButton, {TextColor3 = Theme.SubText}, 0.2)
     end)
     
-    -- Toggle with keybind
+    -- Keybind Toggle
     UserInputService.InputBegan:Connect(function(input, gameProcessed)
         if not gameProcessed and input.KeyCode == MinimizeKey then
             MainFrame.Visible = not MainFrame.Visible
         end
     end)
     
-    -- Tab Container
-    local TabContainer = Instance.new("Frame")
-    TabContainer.Name = "TabContainer"
-    TabContainer.Size = UDim2.new(0, 120, 1, -50)
-    TabContainer.Position = UDim2.new(0, 10, 0, 45)
-    TabContainer.BackgroundColor3 = Theme.Secondary
-    TabContainer.BorderSizePixel = 0
-    TabSidebar (Discord-like)
+    -- Make draggable
+    MakeDraggable(MainFrame, TopBar)
+    
+    -- Sidebar
     local Sidebar = Instance.new("Frame")
     Sidebar.Name = "Sidebar"
     Sidebar.Size = UDim2.new(0, 200, 1, -50)
@@ -244,47 +239,142 @@ function VoidwareUI:CreateWindow(config)
     Sidebar.BorderSizePixel = 0
     Sidebar.Parent = MainFrame
     
-    local SidebarCorner = Instance.new("UICorner")
-    SidebarCorner.CornerRadius = UDim.new(0, 0)
-    SidebarCorner.Parent = Sidebar
+    -- Search Bar
+    local SearchContainer = Instance.new("Frame")
+    SearchContainer.Name = "SearchContainer"
+    SearchContainer.Size = UDim2.new(1, -16, 0, 35)
+    SearchContainer.Position = UDim2.new(0, 8, 0, 10)
+    SearchContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    SearchContainer.BackgroundTransparency = 0.5
+    SearchContainer.BorderSizePixel = 0
+    SearchContainer.Parent = Sidebar
     
-    local SidebarFill = Instance.new("Frame")
-    SidebarFill.Size = UDim2.new(1, 0, 0, 8)
-    SidebarFill.Position = UDim2.new(0, 0, 0, 0)
-    SidebarFill.BackgroundColor3 = Theme.Sidebar
-    SidebarFill.BorderSizePixel = 0
-    SidebarFill.Parent = Sidebar
+    local SearchCorner = Instance.new("UICorner")
+    SearchCorner.CornerRadius = UDim.new(0, 4)
+    SearchCorner.Parent = SearchContainer
     
-    local SidebarBottomCorner = Instance.new("UICorner")
-    SidebarBottomCorner.CornerRadius = UDim.new(0, 8)
-    SidebarBottomCorner.Parent = Sidebar
+    local SearchIcon = Instance.new("TextLabel")
+    SearchIcon.Size = UDim2.new(0, 30, 1, 0)
+    SearchIcon.BackgroundTransparency = 1
+    SearchIcon.Text = "🔍"
+    SearchIcon.TextColor3 = Theme.SubText
+    SearchIcon.TextSize = 16
+    SearchIcon.Font = Enum.Font.Gotham
+    SearchIcon.Parent = SearchContainer
     
-    local SidebarBottomFill = Instance.new("Frame")
-    SidebarBottomFill.Size = UDim2.new(1, 0, 0, 8)
-    SidebarBottomFill.Position = UDim2.new(0, 0, 1, -8)
-    SidebarBottomFill.BackgroundColor3 = Theme.Sidebar
-    SidebarBottomFill.BorderSizePixel = 0
-    SidebarBottomFill.Parent = Sidebar
+    local SearchBox = Instance.new("TextBox")
+    SearchBox.Size = UDim2.new(1, -35, 1, 0)
+    SearchBox.Position = UDim2.new(0, 30, 0, 0)
+    SearchBox.BackgroundTransparency = 1
+    SearchBox.Text = ""
+    SearchBox.PlaceholderText = "Search"
+    SearchBox.PlaceholderColor3 = Theme.SubText
+    SearchBox.TextColor3 = Theme.Text
+    SearchBox.TextSize = 14
+    SearchBox.Font = Enum.Font.Gotham
+    SearchBox.TextXAlignment = Enum.TextXAlignment.Left
+    SearchBox.ClearTextOnFocus = false
+    SearchBox.Parent = SearchContainer
+    
+    -- Tab Container
+    local TabContainer = Instance.new("Frame")
+    TabContainer.Name = "TabContainer"
+    TabContainer.Size = UDim2.new(1, 0, 1, -130)
+    TabContainer.Position = UDim2.new(0, 0, 0, 55)
+    TabContainer.BackgroundTransparency = 1
+    TabContainer.BorderSizePixel = 0
+    TabContainer.Parent = Sidebar
     
     local TabList = Instance.new("UIListLayout")
     TabList.SortOrder = Enum.SortOrder.LayoutOrder
     TabList.Padding = UDim.new(0, 2)
-    TabList.Parent = Sidebar
+    TabList.Parent = TabContainer
     
     local TabPadding = Instance.new("UIPadding")
-    TabPadding.PaddingTop = UDim.new(0, 10)
+    TabPadding.PaddingTop = UDim.new(0, 5)
     TabPadding.PaddingLeft = UDim.new(0, 8)
-    TabPadding.PaddingRight = UDim.new(0, 8)
-    TabPadding.PaddingBottom = UDim.new(0, 10)
-    TabPadding.Parent (Discord-like)
+    TabPadding.PaddingRight = UDim2.new(0, 8)
+    TabPadding.Parent = TabContainer
+    
+    -- Player Info at Bottom
+    local PlayerInfo = Instance.new("Frame")
+    PlayerInfo.Name = "PlayerInfo"
+    PlayerInfo.Size = UDim2.new(1, 0, 0, 60)
+    PlayerInfo.Position = UDim2.new(0, 0, 1, -60)
+    PlayerInfo.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    PlayerInfo.BackgroundTransparency = 0.3
+    PlayerInfo.BorderSizePixel = 0
+    PlayerInfo.Parent = Sidebar
+    
+    local Players = game:GetService("Players")
+    local LocalPlayer = Players.LocalPlayer
+    
+    -- Player Avatar
+    local PlayerAvatar = Instance.new("ImageLabel")
+    PlayerAvatar.Size = UDim2.new(0, 40, 0, 40)
+    PlayerAvatar.Position = UDim2.new(0, 10, 0.5, -20)
+    PlayerAvatar.BackgroundColor3 = Theme.Accent
+    PlayerAvatar.BorderSizePixel = 0
+    PlayerAvatar.Image = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
+    PlayerAvatar.Parent = PlayerInfo
+    
+    local AvatarCorner = Instance.new("UICorner")
+    AvatarCorner.CornerRadius = UDim.new(1, 0)
+    AvatarCorner.Parent = PlayerAvatar
+    
+    local PlayerName = Instance.new("TextLabel")
+    PlayerName.Size = UDim2.new(1, -65, 0, 20)
+    PlayerName.Position = UDim2.new(0, 55, 0, 10)
+    PlayerName.BackgroundTransparency = 1
+    PlayerName.Text = LocalPlayer.Name
+    PlayerName.TextColor3 = Theme.Text
+    PlayerName.TextSize = 14
+    PlayerName.Font = Enum.Font.GothamBold
+    PlayerName.TextXAlignment = Enum.TextXAlignment.Left
+    PlayerName.TextTruncate = Enum.TextTruncate.AtEnd
+    PlayerName.Parent = PlayerInfo
+    
+    local PlayerStatus = Instance.new("TextLabel")
+    PlayerStatus.Size = UDim2.new(1, -65, 0, 18)
+    PlayerStatus.Position = UDim2.new(0, 55, 0, 28)
+    PlayerStatus.BackgroundTransparency = 1
+    PlayerStatus.Text = "@" .. LocalPlayer.Name:lower()
+    PlayerStatus.TextColor3 = Theme.SubText
+    PlayerStatus.TextSize = 12
+    PlayerStatus.Font = Enum.Font.Gotham
+    PlayerStatus.TextXAlignment = Enum.TextXAlignment.Left
+    PlayerStatus.TextTruncate = Enum.TextTruncate.AtEnd
+    PlayerStatus.Parent = PlayerInfo
+    
+    -- Content Container
+    local ContentContainer = Instance.new("Frame")
+    ContentContainer.Name = "ContentContainer"
+    ContentContainer.Size = UDim2.new(1, -200, 1, -50)
+    ContentContainer.Position = UDim2.new(0, 200, 0, 50)
+    ContentContainer.BackgroundTransparency = 1
+    ContentContainer.BorderSizePixel = 0
+    ContentContainer.Parent = MainFrame
+    
+    -- Window Object
+    local Window = {
+        Tabs = {},
+        CurrentTab = nil
+    }
+    
+    -- CreateTab: Create a new tab
+    function Window:CreateTab(config)
+        config = config or {}
+        local TabName = config.Name or config.Title or "Tab"
+        local TabIcon = config.Icon or "📄"
+        
+        -- Tab Button
         local TabButton = Instance.new("TextButton")
         TabButton.Name = TabName
         TabButton.Size = UDim2.new(1, 0, 0, 40)
-        TabButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0, 0)
         TabButton.BackgroundTransparency = 1
         TabButton.BorderSizePixel = 0
         TabButton.Text = ""
-        TabButton.Parent = Sidebar
+        TabButton.Parent = TabContainer
         
         local TabIndicator = Instance.new("Frame")
         TabIndicator.Name = "Indicator"
@@ -298,35 +388,26 @@ function VoidwareUI:CreateWindow(config)
         IndicatorCorner.CornerRadius = UDim.new(0, 2)
         IndicatorCorner.Parent = TabIndicator
         
+        local TabIconLabel = Instance.new("TextLabel")
+        TabIconLabel.Size = UDim2.new(0, 30, 1, 0)
+        TabIconLabel.Position = UDim2.new(0, 12, 0, 0)
+        TabIconLabel.BackgroundTransparency = 1
+        TabIconLabel.Text = TabIcon
+        TabIconLabel.TextColor3 = Theme.SubText
+        TabIconLabel.TextSize = 18
+        TabIconLabel.Font = Enum.Font.Gotham
+        TabIconLabel.Parent = TabButton
+        
         local TabLabel = Instance.new("TextLabel")
-        TabLabel.Size = UDim2.new(1, -12, 1, 0)
-        TabLabel.Position = UDim2.new(0, 12, 0, 0)
+        TabLabel.Size = UDim2.new(1, -50, 1, 0)
+        TabLabel.Position = UDim2.new(0, 40, 0, 0)
         TabLabel.BackgroundTransparency = 1
         TabLabel.Text = TabName
         TabLabel.TextColor3 = Theme.SubText
         TabLabel.TextSize = 15
         TabLabel.Font = Enum.Font.GothamSemibold
         TabLabel.TextXAlignment = Enum.TextXAlignment.Left
-        TabLabel or {}
-        local TabName = config.Title or "Tab"
-        local TabIcon = config.Icon or ""
-        
-        -- Tab Button
-        local TabButton = Instance.new("TextButton")
-        TabButton.Name = TabName
-        TabButton.Size = UDim2.new(1, 0, 0, 35)
-        TabButton.BackgroundColor3 = Theme.Background
-        TabButton.BorderSizePixel = 0
-        TabButton.Text = "  " .. TabName
-        TabButton.TextColor3 = Theme.SubText
-        TabButton.TextSize = 14
-        TabButton.Font = Enum.Font.Gotham
-        TabButton.TextXAlignment = Enum.TextXAlignment.Left
-        TabButton.Parent = TabContainer
-        
-        local TabButtonCorner = Instance.new("UICorner")
-        TabButtonCorner.CornerRadius = UDim.new(0, 6)
-        TabButtonCorner.Parent = TabButton
+        TabLabel.Parent = TabButton
         
         -- Tab Content
         local TabContent = Instance.new("ScrollingFrame")
@@ -367,13 +448,20 @@ function VoidwareUI:CreateWindow(config)
                 tab.Active = false
                 tab.Content.Visible = false
                 Tween(tab.Button:FindFirstChild("Indicator"), {Size = UDim2.new(0, 0, 0, 24)}, 0.2)
-                Tween(tab.Button:FindFirstChild("TextLabel"), {TextColor3 = Theme.SubText}, 0.2)
+                local label = tab.Button:FindFirstChild("TextLabel")
+                if label then Tween(label, {TextColor3 = Theme.SubText}, 0.2) end
+                for _, child in pairs(tab.Button:GetChildren()) do
+                    if child:IsA("TextLabel") and child.Name ~= "TextLabel" then
+                        Tween(child, {TextColor3 = Theme.SubText}, 0.2)
+                    end
+                end
             end
             
             self.Active = true
             self.Content.Visible = true
             Tween(TabIndicator, {Size = UDim2.new(0, 4, 0, 24)}, 0.2)
             Tween(TabLabel, {TextColor3 = Theme.Text}, 0.2)
+            Tween(TabIconLabel, {TextColor3 = Theme.Accent}, 0.2)
             Window.CurrentTab = self
         end
         
@@ -384,6 +472,7 @@ function VoidwareUI:CreateWindow(config)
         TabButton.MouseEnter:Connect(function()
             if not Tab.Active then
                 Tween(TabLabel, {TextColor3 = Theme.Text}, 0.2)
+                Tween(TabIconLabel, {TextColor3 = Theme.Text}, 0.2)
                 Tween(TabIndicator, {Size = UDim2.new(0, 2, 0, 24)}, 0.2)
             end
         end)
@@ -391,22 +480,55 @@ function VoidwareUI:CreateWindow(config)
         TabButton.MouseLeave:Connect(function()
             if not Tab.Active then
                 Tween(TabLabel, {TextColor3 = Theme.SubText}, 0.2)
+                Tween(TabIconLabel, {TextColor3 = Theme.SubText}, 0.2)
                 Tween(TabIndicator, {Size = UDim2.new(0, 0, 0, 24)}, 0.2)
             end
         end)
         
-        -- Add Toggle
-        function Tab:AddToggle(id, config)
+        -- AddSection: Create section divider
+        function Tab:AddSection(config)
             config = config or {}
-            local Title = config.Title or "Toggle"
-            local Description = config.Description or ""
+            local Title = config.Name or config.Title or "Section"
+            
+            local SectionFrame = Instance.new("Frame")
+            SectionFrame.Name = "Section_" .. Title
+            SectionFrame.Size = UDim2.new(1, 0, 0, 35)
+            SectionFrame.BackgroundTransparency = 1
+            SectionFrame.BorderSizePixel = 0
+            SectionFrame.Parent = TabContent
+            
+            local SectionTitle = Instance.new("TextLabel")
+            SectionTitle.Size = UDim2.new(1, -20, 0, 25)
+            SectionTitle.Position = UDim2.new(0, 10, 0, 5)
+            SectionTitle.BackgroundTransparency = 1
+            SectionTitle.Text = Title
+            SectionTitle.TextColor3 = Theme.Accent
+            SectionTitle.TextSize = 16
+            SectionTitle.Font = Enum.Font.GothamBold
+            SectionTitle.TextXAlignment = Enum.TextXAlignment.Left
+            SectionTitle.Parent = SectionFrame
+            
+            local SectionLine = Instance.new("Frame")
+            SectionLine.Size = UDim2.new(1, -20, 0, 1)
+            SectionLine.Position = UDim2.new(0, 10, 1, -5)
+            SectionLine.BackgroundColor3 = Theme.Border
+            SectionLine.BorderSizePixel = 0
+            SectionLine.Parent = SectionFrame
+            
+            return SectionFrame
+        end
+        
+        -- AddToggle: Create toggle switch
+        function Tab:AddToggle(config)
+            config = config or {}
+            local Title = config.Name or config.Title or "Toggle"
+            local Description = config.Description or config.Desc or ""
             local Default = config.Default or false
             local Callback = config.Callback or function() end
             
             local ToggleFrame = Instance.new("Frame")
-            ToggleFrame.Name = id
+            ToggleFrame.Name = "Toggle_" .. Title
             ToggleFrame.Size = UDim2.new(1, 0, 0, Description ~= "" and 70 or 50)
-            ToggleFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0, 0)
             ToggleFrame.BackgroundTransparency = 1
             ToggleFrame.BorderSizePixel = 0
             ToggleFrame.Parent = TabContent
@@ -424,19 +546,19 @@ function VoidwareUI:CreateWindow(config)
             
             if Description ~= "" then
                 local ToggleDesc = Instance.new("TextLabel")
-                ToggleDesc.Size = UDim2.new(1, -80, 0, 30)
-                ToggleDesc.Position = UDim2.new(0, 15, 0, 32)
+                ToggleDesc.Size = UDim2.new(1, -80, 0, 35)
+                ToggleDesc.Position = UDim2.new(0, 15, 0, 30)
                 ToggleDesc.BackgroundTransparency = 1
                 ToggleDesc.Text = Description
                 ToggleDesc.TextColor3 = Theme.SubText
                 ToggleDesc.TextSize = 13
                 ToggleDesc.Font = Enum.Font.Gotham
                 ToggleDesc.TextXAlignment = Enum.TextXAlignment.Left
+                ToggleDesc.TextYAlignment = Enum.TextYAlignment.Top
                 ToggleDesc.TextWrapped = true
                 ToggleDesc.Parent = ToggleFrame
             end
             
-            -- Toggle Switch (Circular like Discord/Voidware)
             local ToggleButton = Instance.new("TextButton")
             ToggleButton.Size = UDim2.new(0, 40, 0, 20)
             ToggleButton.Position = UDim2.new(1, -55, 0.5, -10)
@@ -464,10 +586,8 @@ function VoidwareUI:CreateWindow(config)
             
             ToggleButton.MouseButton1Click:Connect(function()
                 toggled = not toggled
-                
                 Tween(ToggleButton, {BackgroundColor3 = toggled and Theme.ToggleOn or Theme.ToggleOff}, 0.2)
                 Tween(ToggleCircle, {Position = toggled and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)}, 0.2)
-                
                 Callback(toggled)
             end)
             
@@ -480,88 +600,26 @@ function VoidwareUI:CreateWindow(config)
             }
         end
         
-        -- Add Button
-        function Tab:AddButton(config)
+        -- AddSlider: Create slider
+        function Tab:AddSlider(config)
             config = config or {}
-            local Title = config.Title or "Button"
-            local Description = config.Description or ""
-            local Callback = config.Callback or function() end
-            
-            local ButtonFrame = Instance.new("TextButton")
-            ButtonFrame.Size = UDim2.new(1, 0, 0, Description ~= "" and 60 or 45)
-            ButtonFrame.BackgroundColor3 = Theme.Secondary
-            ButtonFrame.BorderSizePixel = 0
-            ButtonFrame.Text = ""
-            ButtonFrame.Parent = TabContent
-            
-            local ButtonCorner = Instance.new("UICorner")
-            ButtonCorner.CornerRadius = UDim.new(0, 8)
-            ButtonCorner.Parent = ButtonFrame
-            
-            local ButtonTitle = Instance.new("TextLabel")
-            ButtonTitle.Size = UDim2.new(1, -30, 0, Description ~= "" and 20 or 45)
-            ButtonTitle.Position = UDim2.new(0, 15, 0, Description ~= "" and 8 or 0)
-            ButtonTitle.BackgroundTransparency = 1
-            ButtonTitle.Text = Title
-            ButtonTitle.TextColor3 = Theme.Text
-            ButtonTitle.TextSize = 14
-            ButtonTitle.Font = Enum.Font.GothamSemibold
-            ButtonTitle.TextXAlignment = Enum.TextXAlignment.Left
-            ButtonTitle.Parent = ButtonFrame
-            
-            if Description ~= "" then
-                local ButtonDesc = Instance.new("TextLabel")
-                ButtonDesc.Size = UDim2.new(1, -30, 0, 25)
-                ButtonDesc.Position = UDim2.new(0, 15, 0, 28)
-                ButtonDesc.BackgroundTransparency = 1
-                ButtonDesc.Text = Description
-                ButtonDesc.TextColor3 = Theme.SubText
-                ButtonDesc.TextSize = 12
-                ButtonDesc.Font = Enum.Font.Gotham
-                ButtonDesc.TextXAlignment = Enum.TextXAlignment.Left
-                ButtonDesc.TextWrapped = true
-                ButtonDesc.Parent = ButtonFrame
-            end
-            
-            ButtonFrame.MouseButton1Click:Connect(function()
-                Tween(ButtonFrame, {BackgroundColor3 = Theme.Accent}, 0.1)
-                task.wait(0.1)
-                Tween(ButtonFrame, {BackgroundColor3 = Theme.Secondary}, 0.1)
-                Callback()
-            end)
-            
-            ButtonFrame.MouseEnter:Connect(function()
-                Tween(ButtonFrame, {BackgroundColor3 = Theme.Border}, 0.2)
-            end)
-            
-            ButtonFrame.MouseLeave:Connect(function()
-                Tween(ButtonFrame, {BackgroundColor3 = Theme.Secondary}, 0.2)
-            end)
-        end
-        
-        -- Add Slider
-        function Tab:AddSlider(id, config)
-            config = config or {}
-            local Title = config.Title or "Slider"
-            local Description = config.Description or ""
+            local Title = config.Name or config.Title or "Slider"
+            local Description = config.Description or config.Desc or ""
             local Min = config.Min or 0
             local Max = config.Max or 100
             local Default = config.Default or Min
-            local Rounding = config.Rounding or 1
+            local Increment = config.Increment or config.Rounding or 1
             local Callback = config.Callback or function() end
             
             local SliderFrame = Instance.new("Frame")
-            SliderFrame.Name = id
-            SliderFrame.Size = UDim2.new(1, 0, 0, Description ~= "" and 70 or 55)
-            SliderFrame.BackgroundColor3 = Theme.Secondary
-            SliderFrame.BorderSizePixel = 080 or 60)
-            SliderFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0, 0)
+            SliderFrame.Name = "Slider_" .. Title
+            SliderFrame.Size = UDim2.new(1, 0, 0, Description ~= "" and 85 or 65)
             SliderFrame.BackgroundTransparency = 1
             SliderFrame.BorderSizePixel = 0
             SliderFrame.Parent = TabContent
             
             local SliderTitle = Instance.new("TextLabel")
-            SliderTitle.Size = UDim2.new(1, -80, 0, 22)
+            SliderTitle.Size = UDim2.new(0.7, 0, 0, 20)
             SliderTitle.Position = UDim2.new(0, 15, 0, 8)
             SliderTitle.BackgroundTransparency = 1
             SliderTitle.Text = Title
@@ -572,20 +630,20 @@ function VoidwareUI:CreateWindow(config)
             SliderTitle.Parent = SliderFrame
             
             local SliderValue = Instance.new("TextLabel")
-            SliderValue.Size = UDim2.new(0, 60, 0, 22)
-            SliderValue.Position = UDim2.new(1, -70, 0, 8)
+            SliderValue.Size = UDim2.new(0.3, -15, 0, 20)
+            SliderValue.Position = UDim2.new(0.7, 0, 0, 8)
             SliderValue.BackgroundTransparency = 1
             SliderValue.Text = tostring(Default)
-            SliderValue.TextColor3 = Theme.SubText
-            SliderValue.TextSize = 14
-            SliderValue.Font = Enum.Font.GothamMedium
+            SliderValue.TextColor3 = Theme.Accent
+            SliderValue.TextSize = 15
+            SliderValue.Font = Enum.Font.GothamBold
             SliderValue.TextXAlignment = Enum.TextXAlignment.Right
             SliderValue.Parent = SliderFrame
             
             if Description ~= "" then
                 local SliderDesc = Instance.new("TextLabel")
-                SliderDesc.Size = UDim2.new(1, -30, 0, 18)
-                SliderDesc.Position = UDim2.new(0, 15, 0, 32)
+                SliderDesc.Size = UDim2.new(1, -30, 0, 20)
+                SliderDesc.Position = UDim2.new(0, 15, 0, 28)
                 SliderDesc.BackgroundTransparency = 1
                 SliderDesc.Text = Description
                 SliderDesc.TextColor3 = Theme.SubText
@@ -596,20 +654,22 @@ function VoidwareUI:CreateWindow(config)
                 SliderDesc.Parent = SliderFrame
             end
             
-            local SliderBar = Instance.new("Frame")
-            SliderBar.Size = UDim2.new(1, -30, 0, 4)
-            SliderBar.Position = UDim2.new(0, 15, 1, -12)
-            SliderBar.BackgroundColor3 = Theme.Secondary
+            local SliderBG = Instance.new("Frame")
+            SliderBG.Size = UDim2.new(1, -30, 0, 4)
+            SliderBG.Position = UDim2.new(0, 15, 1, Description ~= "" and -18 or -15)
+            SliderBG.BackgroundColor3 = Theme.Secondary
+            SliderBG.BorderSizePixel = 0
+            SliderBG.Parent = SliderFrame
             
-            local SliderBarCorner = Instance.new("UICorner")
-            SliderBarCorner.CornerRadius = UDim.new(1, 0)
-            SliderBarCorner.Parent = SliderBar
+            local SliderBGCorner = Instance.new("UICorner")
+            SliderBGCorner.CornerRadius = UDim.new(1, 0)
+            SliderBGCorner.Parent = SliderBG
             
             local SliderFill = Instance.new("Frame")
             SliderFill.Size = UDim2.new((Default - Min) / (Max - Min), 0, 1, 0)
             SliderFill.BackgroundColor3 = Theme.Accent
             SliderFill.BorderSizePixel = 0
-            SliderFill.Parent = SliderBar
+            SliderFill.Parent = SliderBG
             
             local SliderFillCorner = Instance.new("UICorner")
             SliderFillCorner.CornerRadius = UDim.new(1, 0)
@@ -618,23 +678,21 @@ function VoidwareUI:CreateWindow(config)
             local dragging = false
             
             local function UpdateSlider(input)
-                local pos = math.clamp((input.Position.X - SliderBar.AbsolutePosition.X) / SliderBar.AbsoluteSize.X, 0, 1)
-                local value = math.floor((Min + (Max - Min) * pos) / Rounding + 0.5) * Rounding
-                value = math.clamp(value, Min, Max)
-                
-                SliderFill.Size = UDim2.new(pos, 0, 1, 0)
+                local pos = math.clamp((input.Position.X - SliderBG.AbsolutePosition.X) / SliderBG.AbsoluteSize.X, 0, 1)
+                local value = math.floor((Min + (Max - Min) * pos) / Increment + 0.5) * Increment
                 SliderValue.Text = tostring(value)
+                Tween(SliderFill, {Size = UDim2.new(pos, 0, 1, 0)}, 0.1)
                 Callback(value)
             end
             
-            SliderBar.InputBegan:Connect(function(input)
+            SliderBG.InputBegan:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 then
                     dragging = true
                     UpdateSlider(input)
                 end
             end)
             
-            SliderBar.InputEnded:Connect(function(input)
+            SliderBG.InputEnded:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 then
                     dragging = false
                 end
@@ -649,197 +707,227 @@ function VoidwareUI:CreateWindow(config)
             return {
                 Set = function(value)
                     value = math.clamp(value, Min, Max)
-                    local pos = (value - Min) / (Max - Min)
-                    SliderFill.Size = UDim2.new(pos, 0, 1, 0)
                     SliderValue.Text = tostring(value)
+                    Tween(SliderFill, {Size = UDim2.new((value - Min) / (Max - Min), 0, 1, 0)}, 0.2)
                 end
             }
         end
         
-        -- Add Dropdown
-        function Tab:AddDropdown(id, config)
+        -- AddDropdown: Create dropdown menu
+        function Tab:AddDropdown(config)
             config = config or {}
-            local Title = config.Title or "Dropdown"
-            local Description = config.Description or ""
-            local Values = config.Values or {"Option 1", "Option 2"}
-            local Default = config.Default or 1
-            local Multi = config.Multi or false
+            local Title = config.Name or config.Title or "Dropdown"
+            local Options = config.Options or {}
+            local Default = config.Default or Options[1] or ""
             local Callback = config.Callback or function() end
             
             local DropdownFrame = Instance.new("Frame")
-            DropdownFrame.Name = id
-            DropdownFrame.Size = UDim2.new(1, 0, 0, Description ~= "" and 60 or 45)
-            DropdownFrame.BackgroundColor3 = Theme.Secondary
+            DropdownFrame.Name = "Dropdown_" .. Title
+            DropdownFrame.Size = UDim2.new(1, 0, 0, 50)
+            DropdownFrame.BackgroundTransparency = 1
             DropdownFrame.BorderSizePixel = 0
-            DropdownFrame.ClipsDescendants = true
             DropdownFrame.Parent = TabContent
             
-            local DropdownCorner = Instance.new("UICorner")
-            DropdownCorner.CornerRadius = UDim.new(0, 8)
-            DropdownCorner.Parent = DropdownFrame
-            
             local DropdownTitle = Instance.new("TextLabel")
-            DropdownTitle.Size = UDim2.new(1, -60, 0, Description ~= "" and 20 or 45)
-            DropdownTitle.Position = UDim2.new(0, 15, 0, Description ~= "" and 8 or 0)
+            DropdownTitle.Size = UDim2.new(1, -30, 0, 20)
+            DropdownTitle.Position = UDim2.new(0, 15, 0, 5)
             DropdownTitle.BackgroundTransparency = 1
             DropdownTitle.Text = Title
             DropdownTitle.TextColor3 = Theme.Text
-            DropdownTitle.TextSize = 14
+            DropdownTitle.TextSize = 15
             DropdownTitle.Font = Enum.Font.GothamSemibold
             DropdownTitle.TextXAlignment = Enum.TextXAlignment.Left
             DropdownTitle.Parent = DropdownFrame
             
-            if Description ~= "" then
-                local DropdownDesc = Instance.new("TextLabel")
-                DropdownDesc.Size = UDim2.new(1, -60, 0, 25)
-                DropdownDesc.Position = UDim2.new(0, 15, 0, 28)
-                DropdownDesc.BackgroundTransparency = 1
-                DropdownDesc.Text = Description
-                DropdownDesc.TextColor3 = Theme.SubText
-                DropdownDesc.TextSize = 12
-                DropdownDesc.Font = Enum.Font.Gotham
-                DropdownDesc.TextXAlignment = Enum.TextXAlignment.Left
-                DropdownDesc.TextWrapped = true
-                DropdownDesc.Parent = DropdownFrame
-            end
-            
             local DropdownButton = Instance.new("TextButton")
             DropdownButton.Size = UDim2.new(1, -30, 0, 30)
-            DropdownButton.Position = UDim2.new(0, 15, 1, -(Description ~= "" and 38 or 38))
-            DropdownButton.BackgroundColor3 = Theme.Border
+            DropdownButton.Position = UDim2.new(0, 15, 0, 25)
+            DropdownButton.BackgroundColor3 = Theme.Secondary
             DropdownButton.BorderSizePixel = 0
-            DropdownButton.Text = "  " .. Values[Default]
-            DropdownButton.TextColor3 = Theme.Text
-            DropdownButton.TextSize = 13
-            DropdownButton.Font = Enum.Font.Gotham
-            DropdownButton.TextXAlignment = Enum.TextXAlignment.Left
+            DropdownButton.Text = ""
             DropdownButton.Parent = DropdownFrame
             
-            local DropdownButtonCorner = Instance.new("UICorner")
-            DropdownButtonCorner.CornerRadius = UDim.new(0, 6)
-            DropdownButtonCorner.Parent = DropdownButton
+            local DropdownCorner = Instance.new("UICorner")
+            DropdownCorner.CornerRadius = UDim.new(0, 5)
+            DropdownCorner.Parent = DropdownButton
             
-            local Arrow = Instance.new("TextLabel")
-            Arrow.Size = UDim2.new(0, 20, 1, 0)
-            Arrow.Position = UDim2.new(1, -25, 0, 0)
-            Arrow.BackgroundTransparency = 1
-            Arrow.Text = "▼"
-            Arrow.TextColor3 = Theme.SubText
-            Arrow.TextSize = 10
-            Arrow.Font = Enum.Font.Gotham
-            Arrow.Parent = DropdownButton
+            local DropdownText = Instance.new("TextLabel")
+            DropdownText.Size = UDim2.new(1, -40, 1, 0)
+            DropdownText.Position = UDim2.new(0, 10, 0, 0)
+            DropdownText.BackgroundTransparency = 1
+            DropdownText.Text = Default
+            DropdownText.TextColor3 = Theme.Text
+            DropdownText.TextSize = 14
+            DropdownText.Font = Enum.Font.Gotham
+            DropdownText.TextXAlignment = Enum.TextXAlignment.Left
+            DropdownText.Parent = DropdownButton
             
-            local OptionsList = Instance.new("Frame")
-            OptionsList.Size = UDim2.new(1, -30, 0, 0)
-            OptionsList.Position = UDim2.new(0, 15, 1, -(Description ~= "" and 8 or 8))
-            OptionsList.BackgroundColor3 = Theme.Border
-            OptionsList.BorderSizePixel = 0
-            OptionsList.ClipsDescendants = true
-            OptionsList.Parent = DropdownFrame
+            local DropdownArrow = Instance.new("TextLabel")
+            DropdownArrow.Size = UDim2.new(0, 30, 1, 0)
+            DropdownArrow.Position = UDim2.new(1, -30, 0, 0)
+            DropdownArrow.BackgroundTransparency = 1
+            DropdownArrow.Text = "▼"
+            DropdownArrow.TextColor3 = Theme.SubText
+            DropdownArrow.TextSize = 12
+            DropdownArrow.Font = Enum.Font.Gotham
+            DropdownArrow.Parent = DropdownButton
             
-            local OptionsCorner = Instance.new("UICorner")
-            OptionsCorner.CornerRadius = UDim.new(0, 6)
-            OptionsCorner.Parent = OptionsList
+            local DropdownList = Instance.new("Frame")
+            DropdownList.Size = UDim2.new(1, -30, 0, 0)
+            DropdownList.Position = UDim2.new(0, 15, 0, 60)
+            DropdownList.BackgroundColor3 = Theme.Secondary
+            DropdownList.BorderSizePixel = 0
+            DropdownList.Visible = false
+            DropdownList.ZIndex = 10
+            DropdownList.Parent = DropdownFrame
             
-            local OptionsPadding = Instance.new("UIPadding")
-            OptionsPadding.PaddingTop = UDim.new(0, 5)
-            OptionsPadding.PaddingBottom = UDim.new(0, 5)
-            OptionsPadding.Parent = OptionsList
+            local DropdownListCorner = Instance.new("UICorner")
+            DropdownListCorner.CornerRadius = UDim.new(0, 5)
+            DropdownListCorner.Parent = DropdownList
             
-            local OptionsLayout = Instance.new("UIListLayout")
-            OptionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            OptionsLayout.Padding = UDim.new(0, 2)
-            OptionsLayout.Parent = OptionsList
+            local OptionsContainer = Instance.new("ScrollingFrame")
+            OptionsContainer.Size = UDim2.new(1, 0, 1, 0)
+            OptionsContainer.BackgroundTransparency = 1
+            OptionsContainer.BorderSizePixel = 0
+            OptionsContainer.ScrollBarThickness = 3
+            OptionsContainer.ScrollBarImageColor3 = Theme.Accent
+            OptionsContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
+            OptionsContainer.Parent = DropdownList
             
-            local expanded = false
+            local OptionsList = Instance.new("UIListLayout")
+            OptionsList.SortOrder = Enum.SortOrder.LayoutOrder
+            OptionsList.Padding = UDim.new(0, 2)
+            OptionsList.Parent = OptionsContainer
+            
+            OptionsList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+                OptionsContainer.CanvasSize = UDim2.new(0, 0, 0, OptionsList.AbsoluteContentSize.Y)
+            end)
+            
+            local opened = false
             
             DropdownButton.MouseButton1Click:Connect(function()
-                expanded = not expanded
-                if expanded then
-                    Tween(DropdownFrame, {Size = UDim2.new(1, 0, 0, (Description ~= "" and 60 or 45) + #Values * 32 + 10)}, 0.3)
-                    Tween(OptionsList, {Size = UDim2.new(1, -30, 0, #Values * 32)}, 0.3)
-                    Tween(Arrow, {Rotation = 180}, 0.3)
+                opened = not opened
+                if opened then
+                    DropdownList.Visible = true
+                    local targetHeight = math.min(#Options * 32, 150)
+                    Tween(DropdownFrame, {Size = UDim2.new(1, 0, 0, 50 + targetHeight + 10)}, 0.2)
+                    Tween(DropdownList, {Size = UDim2.new(1, -30, 0, targetHeight)}, 0.2)
+                    Tween(DropdownArrow, {Rotation = 180}, 0.2)
                 else
-                    Tween(DropdownFrame, {Size = UDim2.new(1, 0, 0, Description ~= "" and 60 or 45)}, 0.3)
-                    Tween(OptionsList, {Size = UDim2.new(1, -30, 0, 0)}, 0.3)
-                    Tween(Arrow, {Rotation = 0}, 0.3)
+                    Tween(DropdownFrame, {Size = UDim2.new(1, 0, 0, 50)}, 0.2)
+                    Tween(DropdownList, {Size = UDim2.new(1, -30, 0, 0)}, 0.2)
+                    Tween(DropdownArrow, {Rotation = 0}, 0.2)
+                    task.delay(0.2, function()
+                        DropdownList.Visible = false
+                    end)
                 end
             end)
             
-            for _, value in ipairs(Values) do
-                local Option = Instance.new("TextButton")
-                Option.Size = UDim2.new(1, 0, 0, 28)
-                Option.BackgroundColor3 = Theme.Background
-                Option.BorderSizePixel = 0
-                Option.Text = "  " .. value
-                Option.TextColor3 = Theme.Text
-                Option.TextSize = 12
-                Option.Font = Enum.Font.Gotham
-                Option.TextXAlignment = Enum.TextXAlignment.Left
-                Option.Parent = OptionsList
+            for _, option in ipairs(Options) do
+                local OptionButton = Instance.new("TextButton")
+                OptionButton.Size = UDim2.new(1, 0, 0, 30)
+                OptionButton.BackgroundColor3 = Theme.Background
+                OptionButton.BorderSizePixel = 0
+                OptionButton.Text = option
+                OptionButton.TextColor3 = Theme.Text
+                OptionButton.TextSize = 13
+                OptionButton.Font = Enum.Font.Gotham
+                OptionButton.Parent = OptionsContainer
                 
                 local OptionCorner = Instance.new("UICorner")
-                OptionCorner.CornerRadius = UDim.new(0, 5)
-                OptionCorner.Parent = Option
+                OptionCorner.CornerRadius = UDim.new(0, 4)
+                OptionCorner.Parent = OptionButton
                 
-                Option.MouseButton1Click:Connect(function()
-                    DropdownButton.Text = "  " .. value
-                    Tween(DropdownFrame, {Size = UDim2.new(1, 0, 0, Description ~= "" and 60 or 45)}, 0.3)
-                    Tween(OptionsList, {Size = UDim2.new(1, -30, 0, 0)}, 0.3)
-                    Tween(Arrow, {Rotation = 0}, 0.3)
-                    expanded = false
-                    Callback(value)
+                OptionButton.MouseEnter:Connect(function()
+                    Tween(OptionButton, {BackgroundColor3 = Theme.Accent}, 0.2)
                 end)
                 
-                Option.MouseEnter:Connect(function()
-                    Tween(Option, {BackgroundColor3 = Theme.Accent}, 0.2)
+                OptionButton.MouseLeave:Connect(function()
+                    Tween(OptionButton, {BackgroundColor3 = Theme.Background}, 0.2)
                 end)
                 
-                Option.MouseLeave:Connect(function()
-                    Tween(Option, {BackgroundColor3 = Theme.Background}, 0.2)
+                OptionButton.MouseButton1Click:Connect(function()
+                    DropdownText.Text = option
+                    Callback(option)
+                    opened = false
+                    Tween(DropdownFrame, {Size = UDim2.new(1, 0, 0, 50)}, 0.2)
+                    Tween(DropdownList, {Size = UDim2.new(1, -30, 0, 0)}, 0.2)
+                    Tween(DropdownArrow, {Rotation = 0}, 0.2)
+                    task.delay(0.2, function()
+                        DropdownList.Visible = false
+                    end)
                 end)
             end
+            
+            return {
+                Set = function(option)
+                    DropdownText.Text = option
+                end
+            }
         end
         
-        -- Add Paragraph
-        function Tab:AddParagraph(config)
+        -- AddButton: Create button
+        function Tab:AddButton(config)
             config = config or {}
-            local Title = config.Title or "Paragraph"
-            local Content = config.Content or "No content"
+            local Title = config.Name or config.Title or "Button"
+            local Description = config.Description or config.Desc or ""
+            local Callback = config.Callback or function() end
             
-            local ParagraphFrame = Instance.new("Frame")
-            ParagraphFrame.Size = UDim2.new(1, 0, 0, 70)
-            ParagraphFrame.BackgroundColor3 = Theme.Secondary
-            ParagraphFrame.BorderSizePixel = 0
-            ParagraphFrame.Parent = TabContent
+            local ButtonFrame = Instance.new("Frame")
+            ButtonFrame.Name = "Button_" .. Title
+            ButtonFrame.Size = UDim2.new(1, 0, 0, Description ~= "" and 70 or 50)
+            ButtonFrame.BackgroundTransparency = 1
+            ButtonFrame.BorderSizePixel = 0
+            ButtonFrame.Parent = TabContent
             
-            local ParagraphCorner = Instance.new("UICorner")
-            ParagraphCorner.CornerRadius = UDim.new(0, 8)
-            ParagraphCorner.Parent = ParagraphFrame
+            local Button = Instance.new("TextButton")
+            Button.Size = UDim2.new(1, -30, 0, Description ~= "" and 35 or 40)
+            Button.Position = UDim2.new(0, 15, 0, 5)
+            Button.BackgroundColor3 = Theme.Accent
+            Button.BorderSizePixel = 0
+            Button.Text = ""
+            Button.Parent = ButtonFrame
             
-            local ParagraphTitle = Instance.new("TextLabel")
-            ParagraphTitle.Size = UDim2.new(1, -30, 0, 20)
-            ParagraphTitle.Position = UDim2.new(0, 15, 0, 8)
-            ParagraphTitle.BackgroundTransparency = 1
-            ParagraphTitle.Text = Title
-            ParagraphTitle.TextColor3 = Theme.Text
-            ParagraphTitle.TextSize = 14
-            ParagraphTitle.Font = Enum.Font.GothamSemibold
-            ParagraphTitle.TextXAlignment = Enum.TextXAlignment.Left
-            ParagraphTitle.Parent = ParagraphFrame
+            local ButtonCorner = Instance.new("UICorner")
+            ButtonCorner.CornerRadius = UDim.new(0, 6)
+            ButtonCorner.Parent = Button
             
-            local ParagraphContent = Instance.new("TextLabel")
-            ParagraphContent.Size = UDim2.new(1, -30, 1, -35)
-            ParagraphContent.Position = UDim2.new(0, 15, 0, 28)
-            ParagraphContent.BackgroundTransparency = 1
-            ParagraphContent.Text = Content
-            ParagraphContent.TextColor3 = Theme.SubText
-            ParagraphContent.TextSize = 12
-            ParagraphContent.Font = Enum.Font.Gotham
-            ParagraphContent.TextXAlignment = Enum.TextXAlignment.Left
-            ParagraphContent.TextYAlignment = Enum.TextYAlignment.Top
-            ParagraphContent.TextWrapped = true
-            ParagraphContent.Parent = ParagraphFrame
+            local ButtonTitle = Instance.new("TextLabel")
+            ButtonTitle.Size = UDim2.new(1, -20, 0, 20)
+            ButtonTitle.Position = UDim2.new(0, 10, 0, Description ~= "" and 5 or 10)
+            ButtonTitle.BackgroundTransparency = 1
+            ButtonTitle.Text = Title
+            ButtonTitle.TextColor3 = Theme.Text
+            ButtonTitle.TextSize = 15
+            ButtonTitle.Font = Enum.Font.GothamBold
+            ButtonTitle.TextXAlignment = Enum.TextXAlignment.Center
+            ButtonTitle.Parent = Button
+            
+            if Description ~= "" then
+                local ButtonDesc = Instance.new("TextLabel")
+                ButtonDesc.Size = UDim2.new(1, -20, 0, 15)
+                ButtonDesc.Position = UDim2.new(0, 10, 0, 22)
+                ButtonDesc.BackgroundTransparency = 1
+                ButtonDesc.Text = Description
+                ButtonDesc.TextColor3 = Theme.SubText
+                ButtonDesc.TextSize = 12
+                ButtonDesc.Font = Enum.Font.Gotham
+                ButtonDesc.TextXAlignment = Enum.TextXAlignment.Center
+                ButtonDesc.TextWrapped = true
+                ButtonDesc.Parent = Button
+            end
+            
+            Button.MouseEnter:Connect(function()
+                Tween(Button, {BackgroundColor3 = Theme.AccentHover}, 0.2)
+            end)
+            
+            Button.MouseLeave:Connect(function()
+                Tween(Button, {BackgroundColor3 = Theme.Accent}, 0.2)
+            end)
+            
+            Button.MouseButton1Click:Connect(function()
+                Callback()
+            end)
         end
         
         table.insert(Window.Tabs, Tab)
@@ -852,7 +940,7 @@ function VoidwareUI:CreateWindow(config)
         return Tab
     end
     
-    -- Notification System
+    -- Notify: Show notification
     function Window:Notify(config)
         config = config or {}
         local Title = config.Title or "Notification"
@@ -911,5 +999,4 @@ function VoidwareUI:CreateWindow(config)
     return Window
 end
 
-return LethalUI
-Voidware
+return VoidwareUI

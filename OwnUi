@@ -1,22 +1,26 @@
--- LethalUI Library v1.0
--- Modern UI Library by LinuxxUserr
+-- VoidwareUI Library v2.0
+-- Discord-Style UI Library by LinuxxUserr
 
-local LethalUI = {}
+local VoidwareUI = {}
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
 
--- Theme Colors
+-- Theme Colors (Voidware/Discord Style)
 local Theme = {
-    Background = Color3.fromRGB(20, 20, 25),
-    Secondary = Color3.fromRGB(30, 30, 35),
-    Accent = Color3.fromRGB(120, 80, 255),
+    Background = Color3.fromRGB(47, 49, 54),
+    Sidebar = Color3.fromRGB(32, 34, 37),
+    Secondary = Color3.fromRGB(54, 57, 63),
+    Accent = Color3.fromRGB(114, 137, 218),
+    AccentHover = Color3.fromRGB(103, 123, 196),
     Text = Color3.fromRGB(255, 255, 255),
-    SubText = Color3.fromRGB(180, 180, 180),
-    Border = Color3.fromRGB(50, 50, 55),
-    Success = Color3.fromRGB(80, 200, 120),
-    Error = Color3.fromRGB(240, 80, 80)
+    SubText = Color3.fromRGB(185, 187, 190),
+    Border = Color3.fromRGB(40, 43, 48),
+    Success = Color3.fromRGB(67, 181, 129),
+    Error = Color3.fromRGB(240, 71, 71),
+    ToggleOn = Color3.fromRGB(67, 181, 129),
+    ToggleOff = Color3.fromRGB(114, 118, 125)
 }
 
 -- Utility Functions
@@ -59,14 +63,14 @@ local function MakeDraggable(frame, handle)
 end
 
 -- Main Window Creation
-function LethalUI:CreateWindow(config)
+function VoidwareUI:CreateWindow(config)
     config = config or {}
-    local WindowName = config.Name or "LethalUI"
+    local WindowName = config.Name or "VoidwareUI"
     local MinimizeKey = config.MinimizeKey or Enum.KeyCode.RightShift
     
     -- Main ScreenGui
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "LethalUI_" .. math.random(1000, 9999)
+    ScreenGui.Name = "VoidwareUI_" .. math.random(1000, 9999)
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.ResetOnSpawn = false
     
@@ -82,14 +86,14 @@ function LethalUI:CreateWindow(config)
     -- Main Frame
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = "MainFrame"
-    MainFrame.Size = UDim2.new(0, 550, 0, 400)
-    MainFrame.Position = UDim2.new(0.5, -275, 0.5, -200)
+    MainFrame.Size = UDim2.new(0, 700, 0, 500)
+    MainFrame.Position = UDim2.new(0.5, -350, 0.5, -250)
     MainFrame.BackgroundColor3 = Theme.Background
     MainFrame.BorderSizePixel = 0
     MainFrame.Parent = ScreenGui
     
     local UICorner = Instance.new("UICorner")
-    UICorner.CornerRadius = UDim.new(0, 10)
+    UICorner.CornerRadius = UDim.new(0, 8)
     UICorner.Parent = MainFrame
     
     local DropShadow = Instance.new("ImageLabel")
@@ -108,31 +112,52 @@ function LethalUI:CreateWindow(config)
     -- Top Bar
     local TopBar = Instance.new("Frame")
     TopBar.Name = "TopBar"
-    TopBar.Size = UDim2.new(1, 0, 0, 40)
-    TopBar.BackgroundColor3 = Theme.Secondary
+    TopBar.Size = UDim2.new(1, 0, 0, 50)
+    TopBar.BackgroundColor3 = Theme.Sidebar
     TopBar.BorderSizePixel = 0
     TopBar.Parent = MainFrame
     
     local TopBarCorner = Instance.new("UICorner")
-    TopBarCorner.CornerRadius = UDim.new(0, 10)
+    TopBarCorner.CornerRadius = UDim.new(0, 8)
     TopBarCorner.Parent = TopBar
     
     local TopBarFill = Instance.new("Frame")
-    TopBarFill.Size = UDim2.new(1, 0, 0, 10)
-    TopBarFill.Position = UDim2.new(0, 0, 1, -10)
-    TopBarFill.BackgroundColor3 = Theme.Secondary
+    TopBarFill.Size = UDim2.new(1, 0, 0, 15)
+    TopBarFill.Position = UDim2.new(0, 0, 1, -15)
+    TopBarFill.BackgroundColor3 = Theme.Sidebar
     TopBarFill.BorderSizePixel = 0
     TopBarFill.Parent = TopBar
+    
+    -- Title with Icon
+    local TitleIcon = Instance.new("Frame")
+    TitleIcon.Size = UDim2.new(0, 35, 0, 35)
+    TitleIcon.Position = UDim2.new(0, 12, 0.5, -17.5)
+    TitleIcon.BackgroundColor3 = Theme.Accent
+    TitleIcon.BorderSizePixel = 0
+    TitleIcon.Parent = TopBar
+    
+    local IconCorner = Instance.new("UICorner")
+    IconCorner.CornerRadius = UDim.new(0, 8)
+    IconCorner.Parent = TitleIcon
+    
+    local IconText = Instance.new("TextLabel")
+    IconText.Size = UDim2.new(1, 0, 1, 0)
+    IconText.BackgroundTransparency = 1
+    IconText.Text = string.sub(WindowName, 1, 1)
+    IconText.TextColor3 = Theme.Text
+    IconText.TextSize = 20
+    IconText.Font = Enum.Font.GothamBold
+    IconText.Parent = TitleIcon
     
     -- Title
     local Title = Instance.new("TextLabel")
     Title.Name = "Title"
-    Title.Size = UDim2.new(1, -100, 1, 0)
-    Title.Position = UDim2.new(0, 15, 0, 0)
+    Title.Size = UDim2.new(1, -170, 1, 0)
+    Title.Position = UDim2.new(0, 55, 0, 0)
     Title.BackgroundTransparency = 1
     Title.Text = WindowName
     Title.TextColor3 = Theme.Text
-    Title.TextSize = 18
+    Title.TextSize = 16
     Title.Font = Enum.Font.GothamBold
     Title.TextXAlignment = Enum.TextXAlignment.Left
     Title.Parent = TopBar
@@ -140,19 +165,16 @@ function LethalUI:CreateWindow(config)
     -- Close Button
     local CloseButton = Instance.new("TextButton")
     CloseButton.Name = "CloseButton"
-    CloseButton.Size = UDim2.new(0, 35, 0, 35)
-    CloseButton.Position = UDim2.new(1, -40, 0.5, -17.5)
-    CloseButton.BackgroundColor3 = Theme.Error
+    CloseButton.Size = UDim2.new(0, 40, 0, 40)
+    CloseButton.Position = UDim2.new(1, -45, 0.5, -20)
+    CloseButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0, 0)
+    CloseButton.BackgroundTransparency = 1
     CloseButton.Text = "×"
-    CloseButton.TextColor3 = Theme.Text
-    CloseButton.TextSize = 24
+    CloseButton.TextColor3 = Theme.SubText
+    CloseButton.TextSize = 28
     CloseButton.Font = Enum.Font.GothamBold
     CloseButton.BorderSizePixel = 0
     CloseButton.Parent = TopBar
-    
-    local CloseCorner = Instance.new("UICorner")
-    CloseCorner.CornerRadius = UDim.new(0, 6)
-    CloseCorner.Parent = CloseButton
     
     CloseButton.MouseButton1Click:Connect(function()
         Tween(MainFrame, {Size = UDim2.new(0, 0, 0, 0)}, 0.3)
@@ -161,46 +183,42 @@ function LethalUI:CreateWindow(config)
     end)
     
     CloseButton.MouseEnter:Connect(function()
-        Tween(CloseButton, {BackgroundColor3 = Color3.fromRGB(255, 60, 60)}, 0.2)
+        Tween(CloseButton, {TextColor3 = Theme.Error}, 0.2)
     end)
     
     CloseButton.MouseLeave:Connect(function()
-        Tween(CloseButton, {BackgroundColor3 = Theme.Error}, 0.2)
+        Tween(CloseButton, {TextColor3 = Theme.SubText}, 0.2)
     end)
     
     -- Minimize Button
     local MinimizeButton = Instance.new("TextButton")
     MinimizeButton.Name = "MinimizeButton"
-    MinimizeButton.Size = UDim2.new(0, 35, 0, 35)
-    MinimizeButton.Position = UDim2.new(1, -80, 0.5, -17.5)
-    MinimizeButton.BackgroundColor3 = Theme.Accent
-    MinimizeButton.Text = "_"
-    MinimizeButton.TextColor3 = Theme.Text
+    MinimizeButton.Size = UDim2.new(0, 40, 0, 40)
+    MinimizeButton.Position = UDim2.new(1, -85, 0.5, -20)
+    MinimizeButton.BackgroundTransparency = 1
+    MinimizeButton.Text = "—"
+    MinimizeButton.TextColor3 = Theme.SubText
     MinimizeButton.TextSize = 20
     MinimizeButton.Font = Enum.Font.GothamBold
     MinimizeButton.BorderSizePixel = 0
     MinimizeButton.Parent = TopBar
     
-    local MinimizeCorner = Instance.new("UICorner")
-    MinimizeCorner.CornerRadius = UDim.new(0, 6)
-    MinimizeCorner.Parent = MinimizeButton
-    
     local minimized = false
     MinimizeButton.MouseButton1Click:Connect(function()
         minimized = not minimized
         if minimized then
-            Tween(MainFrame, {Size = UDim2.new(0, 550, 0, 40)}, 0.3)
+            Tween(MainFrame, {Size = UDim2.new(0, 700, 0, 50)}, 0.3)
         else
-            Tween(MainFrame, {Size = UDim2.new(0, 550, 0, 400)}, 0.3)
+            Tween(MainFrame, {Size = UDim2.new(0, 700, 0, 500)}, 0.3)
         end
     end)
     
     MinimizeButton.MouseEnter:Connect(function()
-        Tween(MinimizeButton, {BackgroundColor3 = Color3.fromRGB(150, 100, 255)}, 0.2)
+        Tween(MinimizeButton, {TextColor3 = Theme.Text}, 0.2)
     end)
     
     MinimizeButton.MouseLeave:Connect(function()
-        Tween(MinimizeButton, {BackgroundColor3 = Theme.Accent}, 0.2)
+        Tween(MinimizeButton, {TextColor3 = Theme.SubText}, 0.2)
     end)
     
     -- Toggle with keybind
@@ -217,44 +235,79 @@ function LethalUI:CreateWindow(config)
     TabContainer.Position = UDim2.new(0, 10, 0, 45)
     TabContainer.BackgroundColor3 = Theme.Secondary
     TabContainer.BorderSizePixel = 0
-    TabContainer.Parent = MainFrame
+    TabSidebar (Discord-like)
+    local Sidebar = Instance.new("Frame")
+    Sidebar.Name = "Sidebar"
+    Sidebar.Size = UDim2.new(0, 200, 1, -50)
+    Sidebar.Position = UDim2.new(0, 0, 0, 50)
+    Sidebar.BackgroundColor3 = Theme.Sidebar
+    Sidebar.BorderSizePixel = 0
+    Sidebar.Parent = MainFrame
     
-    local TabContainerCorner = Instance.new("UICorner")
-    TabContainerCorner.CornerRadius = UDim.new(0, 8)
-    TabContainerCorner.Parent = TabContainer
+    local SidebarCorner = Instance.new("UICorner")
+    SidebarCorner.CornerRadius = UDim.new(0, 0)
+    SidebarCorner.Parent = Sidebar
+    
+    local SidebarFill = Instance.new("Frame")
+    SidebarFill.Size = UDim2.new(1, 0, 0, 8)
+    SidebarFill.Position = UDim2.new(0, 0, 0, 0)
+    SidebarFill.BackgroundColor3 = Theme.Sidebar
+    SidebarFill.BorderSizePixel = 0
+    SidebarFill.Parent = Sidebar
+    
+    local SidebarBottomCorner = Instance.new("UICorner")
+    SidebarBottomCorner.CornerRadius = UDim.new(0, 8)
+    SidebarBottomCorner.Parent = Sidebar
+    
+    local SidebarBottomFill = Instance.new("Frame")
+    SidebarBottomFill.Size = UDim2.new(1, 0, 0, 8)
+    SidebarBottomFill.Position = UDim2.new(0, 0, 1, -8)
+    SidebarBottomFill.BackgroundColor3 = Theme.Sidebar
+    SidebarBottomFill.BorderSizePixel = 0
+    SidebarBottomFill.Parent = Sidebar
     
     local TabList = Instance.new("UIListLayout")
     TabList.SortOrder = Enum.SortOrder.LayoutOrder
-    TabList.Padding = UDim.new(0, 5)
-    TabList.Parent = TabContainer
+    TabList.Padding = UDim.new(0, 2)
+    TabList.Parent = Sidebar
     
     local TabPadding = Instance.new("UIPadding")
-    TabPadding.PaddingTop = UDim.new(0, 5)
-    TabPadding.PaddingLeft = UDim.new(0, 5)
-    TabPadding.PaddingRight = UDim.new(0, 5)
-    TabPadding.Parent = TabContainer
-    
-    -- Content Container
-    local ContentContainer = Instance.new("Frame")
-    ContentContainer.Name = "ContentContainer"
-    ContentContainer.Size = UDim2.new(1, -145, 1, -50)
-    ContentContainer.Position = UDim2.new(0, 135, 0, 45)
-    ContentContainer.BackgroundTransparency = 1
-    ContentContainer.BorderSizePixel = 0
-    ContentContainer.ClipsDescendants = true
-    ContentContainer.Parent = MainFrame
-    
-    -- Make draggable
-    MakeDraggable(MainFrame, TopBar)
-    
-    -- Window Object
-    local Window = {
-        Tabs = {},
-        CurrentTab = nil
-    }
-    
-    function Window:AddTab(config)
-        config = config or {}
+    TabPadding.PaddingTop = UDim.new(0, 10)
+    TabPadding.PaddingLeft = UDim.new(0, 8)
+    TabPadding.PaddingRight = UDim.new(0, 8)
+    TabPadding.PaddingBottom = UDim.new(0, 10)
+    TabPadding.Parent (Discord-like)
+        local TabButton = Instance.new("TextButton")
+        TabButton.Name = TabName
+        TabButton.Size = UDim2.new(1, 0, 0, 40)
+        TabButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0, 0)
+        TabButton.BackgroundTransparency = 1
+        TabButton.BorderSizePixel = 0
+        TabButton.Text = ""
+        TabButton.Parent = Sidebar
+        
+        local TabIndicator = Instance.new("Frame")
+        TabIndicator.Name = "Indicator"
+        TabIndicator.Size = UDim2.new(0, 0, 0, 24)
+        TabIndicator.Position = UDim2.new(0, 0, 0.5, -12)
+        TabIndicator.BackgroundColor3 = Theme.Text
+        TabIndicator.BorderSizePixel = 0
+        TabIndicator.Parent = TabButton
+        
+        local IndicatorCorner = Instance.new("UICorner")
+        IndicatorCorner.CornerRadius = UDim.new(0, 2)
+        IndicatorCorner.Parent = TabIndicator
+        
+        local TabLabel = Instance.new("TextLabel")
+        TabLabel.Size = UDim2.new(1, -12, 1, 0)
+        TabLabel.Position = UDim2.new(0, 12, 0, 0)
+        TabLabel.BackgroundTransparency = 1
+        TabLabel.Text = TabName
+        TabLabel.TextColor3 = Theme.SubText
+        TabLabel.TextSize = 15
+        TabLabel.Font = Enum.Font.GothamSemibold
+        TabLabel.TextXAlignment = Enum.TextXAlignment.Left
+        TabLabel or {}
         local TabName = config.Title or "Tab"
         local TabIcon = config.Icon or ""
         
@@ -313,12 +366,14 @@ function LethalUI:CreateWindow(config)
             for _, tab in pairs(Window.Tabs) do
                 tab.Active = false
                 tab.Content.Visible = false
-                Tween(tab.Button, {BackgroundColor3 = Theme.Background, TextColor3 = Theme.SubText}, 0.2)
+                Tween(tab.Button:FindFirstChild("Indicator"), {Size = UDim2.new(0, 0, 0, 24)}, 0.2)
+                Tween(tab.Button:FindFirstChild("TextLabel"), {TextColor3 = Theme.SubText}, 0.2)
             end
             
             self.Active = true
             self.Content.Visible = true
-            Tween(TabButton, {BackgroundColor3 = Theme.Accent, TextColor3 = Theme.Text}, 0.2)
+            Tween(TabIndicator, {Size = UDim2.new(0, 4, 0, 24)}, 0.2)
+            Tween(TabLabel, {TextColor3 = Theme.Text}, 0.2)
             Window.CurrentTab = self
         end
         
@@ -328,13 +383,15 @@ function LethalUI:CreateWindow(config)
         
         TabButton.MouseEnter:Connect(function()
             if not Tab.Active then
-                Tween(TabButton, {BackgroundColor3 = Theme.Border}, 0.2)
+                Tween(TabLabel, {TextColor3 = Theme.Text}, 0.2)
+                Tween(TabIndicator, {Size = UDim2.new(0, 2, 0, 24)}, 0.2)
             end
         end)
         
         TabButton.MouseLeave:Connect(function()
             if not Tab.Active then
-                Tween(TabButton, {BackgroundColor3 = Theme.Background}, 0.2)
+                Tween(TabLabel, {TextColor3 = Theme.SubText}, 0.2)
+                Tween(TabIndicator, {Size = UDim2.new(0, 0, 0, 24)}, 0.2)
             end
         end)
         
@@ -348,44 +405,42 @@ function LethalUI:CreateWindow(config)
             
             local ToggleFrame = Instance.new("Frame")
             ToggleFrame.Name = id
-            ToggleFrame.Size = UDim2.new(1, 0, 0, Description ~= "" and 60 or 45)
-            ToggleFrame.BackgroundColor3 = Theme.Secondary
+            ToggleFrame.Size = UDim2.new(1, 0, 0, Description ~= "" and 70 or 50)
+            ToggleFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0, 0)
+            ToggleFrame.BackgroundTransparency = 1
             ToggleFrame.BorderSizePixel = 0
             ToggleFrame.Parent = TabContent
             
-            local ToggleCorner = Instance.new("UICorner")
-            ToggleCorner.CornerRadius = UDim.new(0, 8)
-            ToggleCorner.Parent = ToggleFrame
-            
             local ToggleTitle = Instance.new("TextLabel")
-            ToggleTitle.Size = UDim2.new(1, -60, 0, Description ~= "" and 20 or 45)
+            ToggleTitle.Size = UDim2.new(1, -80, 0, Description ~= "" and 22 or 50)
             ToggleTitle.Position = UDim2.new(0, 15, 0, Description ~= "" and 8 or 0)
             ToggleTitle.BackgroundTransparency = 1
             ToggleTitle.Text = Title
             ToggleTitle.TextColor3 = Theme.Text
-            ToggleTitle.TextSize = 14
+            ToggleTitle.TextSize = 15
             ToggleTitle.Font = Enum.Font.GothamSemibold
             ToggleTitle.TextXAlignment = Enum.TextXAlignment.Left
             ToggleTitle.Parent = ToggleFrame
             
             if Description ~= "" then
                 local ToggleDesc = Instance.new("TextLabel")
-                ToggleDesc.Size = UDim2.new(1, -60, 0, 25)
-                ToggleDesc.Position = UDim2.new(0, 15, 0, 28)
+                ToggleDesc.Size = UDim2.new(1, -80, 0, 30)
+                ToggleDesc.Position = UDim2.new(0, 15, 0, 32)
                 ToggleDesc.BackgroundTransparency = 1
                 ToggleDesc.Text = Description
                 ToggleDesc.TextColor3 = Theme.SubText
-                ToggleDesc.TextSize = 12
+                ToggleDesc.TextSize = 13
                 ToggleDesc.Font = Enum.Font.Gotham
                 ToggleDesc.TextXAlignment = Enum.TextXAlignment.Left
                 ToggleDesc.TextWrapped = true
                 ToggleDesc.Parent = ToggleFrame
             end
             
+            -- Toggle Switch (Circular like Discord/Voidware)
             local ToggleButton = Instance.new("TextButton")
-            ToggleButton.Size = UDim2.new(0, 45, 0, 22)
-            ToggleButton.Position = UDim2.new(1, -55, 0.5, -11)
-            ToggleButton.BackgroundColor3 = Default and Theme.Success or Theme.Border
+            ToggleButton.Size = UDim2.new(0, 40, 0, 20)
+            ToggleButton.Position = UDim2.new(1, -55, 0.5, -10)
+            ToggleButton.BackgroundColor3 = Default and Theme.ToggleOn or Theme.ToggleOff
             ToggleButton.BorderSizePixel = 0
             ToggleButton.Text = ""
             ToggleButton.Parent = ToggleFrame
@@ -395,8 +450,8 @@ function LethalUI:CreateWindow(config)
             ToggleButtonCorner.Parent = ToggleButton
             
             local ToggleCircle = Instance.new("Frame")
-            ToggleCircle.Size = UDim2.new(0, 18, 0, 18)
-            ToggleCircle.Position = Default and UDim2.new(1, -20, 0.5, -9) or UDim2.new(0, 2, 0.5, -9)
+            ToggleCircle.Size = UDim2.new(0, 16, 0, 16)
+            ToggleCircle.Position = Default and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
             ToggleCircle.BackgroundColor3 = Theme.Text
             ToggleCircle.BorderSizePixel = 0
             ToggleCircle.Parent = ToggleButton
@@ -410,8 +465,8 @@ function LethalUI:CreateWindow(config)
             ToggleButton.MouseButton1Click:Connect(function()
                 toggled = not toggled
                 
-                Tween(ToggleButton, {BackgroundColor3 = toggled and Theme.Success or Theme.Border}, 0.2)
-                Tween(ToggleCircle, {Position = toggled and UDim2.new(1, -20, 0.5, -9) or UDim2.new(0, 2, 0.5, -9)}, 0.2)
+                Tween(ToggleButton, {BackgroundColor3 = toggled and Theme.ToggleOn or Theme.ToggleOff}, 0.2)
+                Tween(ToggleCircle, {Position = toggled and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)}, 0.2)
                 
                 Callback(toggled)
             end)
@@ -419,8 +474,8 @@ function LethalUI:CreateWindow(config)
             return {
                 Set = function(value)
                     toggled = value
-                    Tween(ToggleButton, {BackgroundColor3 = toggled and Theme.Success or Theme.Border}, 0.2)
-                    Tween(ToggleCircle, {Position = toggled and UDim2.new(1, -20, 0.5, -9) or UDim2.new(0, 2, 0.5, -9)}, 0.2)
+                    Tween(ToggleButton, {BackgroundColor3 = toggled and Theme.ToggleOn or Theme.ToggleOff}, 0.2)
+                    Tween(ToggleCircle, {Position = toggled and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)}, 0.2)
                 end
             }
         end
@@ -499,43 +554,42 @@ function LethalUI:CreateWindow(config)
             SliderFrame.Name = id
             SliderFrame.Size = UDim2.new(1, 0, 0, Description ~= "" and 70 or 55)
             SliderFrame.BackgroundColor3 = Theme.Secondary
+            SliderFrame.BorderSizePixel = 080 or 60)
+            SliderFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0, 0)
+            SliderFrame.BackgroundTransparency = 1
             SliderFrame.BorderSizePixel = 0
             SliderFrame.Parent = TabContent
             
-            local SliderCorner = Instance.new("UICorner")
-            SliderCorner.CornerRadius = UDim.new(0, 8)
-            SliderCorner.Parent = SliderFrame
-            
             local SliderTitle = Instance.new("TextLabel")
-            SliderTitle.Size = UDim2.new(1, -60, 0, 20)
+            SliderTitle.Size = UDim2.new(1, -80, 0, 22)
             SliderTitle.Position = UDim2.new(0, 15, 0, 8)
             SliderTitle.BackgroundTransparency = 1
             SliderTitle.Text = Title
             SliderTitle.TextColor3 = Theme.Text
-            SliderTitle.TextSize = 14
+            SliderTitle.TextSize = 15
             SliderTitle.Font = Enum.Font.GothamSemibold
             SliderTitle.TextXAlignment = Enum.TextXAlignment.Left
             SliderTitle.Parent = SliderFrame
             
             local SliderValue = Instance.new("TextLabel")
-            SliderValue.Size = UDim2.new(0, 50, 0, 20)
-            SliderValue.Position = UDim2.new(1, -60, 0, 8)
+            SliderValue.Size = UDim2.new(0, 60, 0, 22)
+            SliderValue.Position = UDim2.new(1, -70, 0, 8)
             SliderValue.BackgroundTransparency = 1
             SliderValue.Text = tostring(Default)
-            SliderValue.TextColor3 = Theme.Accent
+            SliderValue.TextColor3 = Theme.SubText
             SliderValue.TextSize = 14
-            SliderValue.Font = Enum.Font.GothamBold
+            SliderValue.Font = Enum.Font.GothamMedium
             SliderValue.TextXAlignment = Enum.TextXAlignment.Right
             SliderValue.Parent = SliderFrame
             
             if Description ~= "" then
                 local SliderDesc = Instance.new("TextLabel")
-                SliderDesc.Size = UDim2.new(1, -30, 0, 15)
-                SliderDesc.Position = UDim2.new(0, 15, 0, 28)
+                SliderDesc.Size = UDim2.new(1, -30, 0, 18)
+                SliderDesc.Position = UDim2.new(0, 15, 0, 32)
                 SliderDesc.BackgroundTransparency = 1
                 SliderDesc.Text = Description
                 SliderDesc.TextColor3 = Theme.SubText
-                SliderDesc.TextSize = 11
+                SliderDesc.TextSize = 13
                 SliderDesc.Font = Enum.Font.Gotham
                 SliderDesc.TextXAlignment = Enum.TextXAlignment.Left
                 SliderDesc.TextWrapped = true
@@ -543,11 +597,9 @@ function LethalUI:CreateWindow(config)
             end
             
             local SliderBar = Instance.new("Frame")
-            SliderBar.Size = UDim2.new(1, -30, 0, 6)
-            SliderBar.Position = UDim2.new(0, 15, 1, -15)
-            SliderBar.BackgroundColor3 = Theme.Border
-            SliderBar.BorderSizePixel = 0
-            SliderBar.Parent = SliderFrame
+            SliderBar.Size = UDim2.new(1, -30, 0, 4)
+            SliderBar.Position = UDim2.new(0, 15, 1, -12)
+            SliderBar.BackgroundColor3 = Theme.Secondary
             
             local SliderBarCorner = Instance.new("UICorner")
             SliderBarCorner.CornerRadius = UDim.new(1, 0)
@@ -860,3 +912,4 @@ function LethalUI:CreateWindow(config)
 end
 
 return LethalUI
+Voidware
